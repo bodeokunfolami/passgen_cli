@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+import argparse
+import random
+import subprocess
+from string import ascii_letters, digits
+
+# Copy to clipboard
+def clipboard(password):
+    subprocess.run('pbcopy', text=True, input=password)
+
+# Save the password to text file
+def save_pwd(password):
+    with open('passwords.txt', 'a+') as f:
+        f.write(password + '\n')
+
+# Generate the password
+def generate_pwd(length):
+    chars = ascii_letters + digits
+    password = ''.join([random.choice(chars) for i in range(length)])
+    return password
+
+def main():
+    # Initialize the ArgumentParser Class
+    parser = argparse.ArgumentParser(description='Password generator comand line tool')
+
+    # Commands
+    parser.add_argument('-l', '--length', default=8, help="length of passwords")
+    parser.add_argument('-s', '--save', help='save the password', action='store_true')
+
+    # Get args from parser
+    args = parser.parse_args()
+
+    password = generate_pwd(int(args.length))
+    clipboard(password)
+    print(f'Password: {password}')
+    print('Password was copied to clipboard')
+
+    if args.save:
+        save_pwd(password)
+        print('Password saved to password.txt')
+
+
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    main()
